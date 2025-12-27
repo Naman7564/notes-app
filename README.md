@@ -72,23 +72,6 @@ docker compose up --build
 
 Then open http://localhost:8000
 
-## Kubernetes
-
-Manifests are available in `k8s/`.
-
-Example (create namespace + deploy):
-
-```bash
-kubectl create namespace node-app
-kubectl apply -n node-app -f k8s/deployment.yml
-kubectl apply -n node-app -f k8s/service.yml
-```
-
-The sample `Service` is `NodePort` and exposes:
-
-- Service port: `80`
-- Container port: `8000`
-- NodePort: `30003`
 
 ## Useful npm scripts
 
