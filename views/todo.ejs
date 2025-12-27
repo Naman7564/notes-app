@@ -345,7 +345,14 @@
         <div class="container">
             <div class="header">
                 <h1>📝 My Notes</h1>
-                <p>Capture your thoughts, organize your ideas</p>
+                <p>
+                    Capture your thoughts, organize your ideas
+                    <% if (user) { %>
+                        <span style="display:block; margin-top:8px; font-size:0.95rem; opacity:0.85;">
+                            Signed in as <strong><%= user.username %></strong> · <a href="/logout" style="color:#60a5fa;">Logout</a>
+                        </span>
+                    <% } %>
+                </p>
             </div>
 
             <div class="glass-card">

@@ -1,42 +1,43 @@
-# End to End DevSecOps Project for DevOps Engineers
+# End-to-End DevSecOps Project (Jenkins CI/CD)
 
-### In this project, we will learn about  DevOps and DevSecOps tools in one project:
+This folder walks through an end-to-end DevSecOps-style pipeline using a Node.js sample application.
 
-### Tools Covered:
--  Linux
--  Git and GitHub
--  Docker
--  Docker-compose
--  Jenkins CI/CD
--  SonarQube
--  OWASP
--  Trivy 
+## Tools covered
 
-#
+- Linux
+- Git & GitHub
+- Docker
+- Docker Compose
+- Jenkins (CI/CD)
+- SonarQube
+- OWASP Dependency-Check
+- Trivy
 
-## Pre-requisites to implement this project:
+## Prerequisites
 
--  AWS EC2 instance (Ubuntu) with instance type t2.large and root volume 29GB.
+- AWS EC2 instance (Ubuntu), `t2.large`, root volume ~29 GB
 
--  Jenkins installed <br>
-    - Reference: <b><a href="https://www.jenkins.io/doc/book/installing/linux/#long-term-support-release"><u> Jenkins installation </a></u></b>
+- Jenkins installed
+  - Reference: <a href="https://www.jenkins.io/doc/book/installing/linux/#long-term-support-release">Jenkins installation</a>
 
--  Docker and docker-compose installled
+- Docker & Docker Compose installed
+
 ```bash
-    sudo apt-get update
-    sudo apt-get install docker.io -y
-    sudo apt-get install docker-compose -y
+sudo apt-get update
+sudo apt-get install docker.io -y
+sudo apt-get install docker-compose -y
 ```
 
-- Trivy installed <br>
-    - Reference: <b> <a href="https://github.com/DevMadhup/Trivy_Installation_and_implementation/blob/main/README.md"><u>Trivy Installation</a></u></b>
+- Trivy installed
+  - Reference: <a href="https://github.com/DevMadhup/Trivy_Installation_and_implementation/blob/main/README.md">Trivy Installation</a>
 
-- SonarQube Server installed
+- SonarQube server running
+
 ```bash
-    docker run -itd --name sonarqube-server -p 9000:9000 sonarqube:lts-community
+docker run -itd --name sonarqube-server -p 9000:9000 sonarqube:lts-community
 ```
-#
-## Steps for Jenkins CI/CD:
+
+## Steps for Jenkins CI/CD
 
 1)  Access Jenkins UI and setup Jenkins
 

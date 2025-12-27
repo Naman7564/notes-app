@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Login - Notes</title>
+    <style>
+        body { font-family: Arial, sans-serif; background:#0f172a; color:#e2e8f0; margin:0; padding:40px; }
+        .card { max-width:420px; margin:0 auto; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:24px; }
+        h1 { margin:0 0 6px 0; }
+        p { margin:0 0 16px 0; color:rgba(226,232,240,0.8); }
+        label { display:block; margin:12px 0 6px; }
+        input { width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(0,0,0,0.2); color:#e2e8f0; }
+        button { margin-top:14px; width:100%; padding:10px 12px; border-radius:10px; border:0; background:#22c55e; color:#06220f; font-weight:700; cursor:pointer; }
+        .error { margin:10px 0; padding:10px 12px; border-radius:10px; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.35); }
+        a { color:#60a5fa; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Login</h1>
+        <p>Access your personal notes</p>
+
+        <% if (error) { %>
+            <div class="error"><%= error %></div>
+        <% } %>
+
+        <form action="/login" method="post">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" autocomplete="username" required />
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required />
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p style="margin-top:14px;">No account? <a href="/register">Register</a></p>
+    </div>
+</body>
+</html>
