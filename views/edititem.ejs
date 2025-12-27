@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-    <title>Edit Task</title>
+    <title>Edit Note</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Edit your todo task">
+    <meta name="description" content="Edit your note">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -72,7 +72,7 @@
 
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             animation: fadeIn 0.5s ease-out;
         }
 
@@ -139,28 +139,37 @@
             font-size: 0.9rem;
         }
 
-        /* Current Task Display */
-        .current-task {
+        /* Current Note Display */
+        .current-note {
             background: rgba(255, 255, 255, 0.08);
             border-radius: 12px;
-            padding: 16px 20px;
+            padding: 20px;
             margin-bottom: 24px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .current-task-label {
+        .current-note-label {
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 6px;
+            margin-bottom: 10px;
         }
 
-        .current-task-text {
-            font-size: 1.05rem;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 500;
+        .current-note-title {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            margin-bottom: 8px;
             word-break: break-word;
+        }
+
+        .current-note-content {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+            word-break: break-word;
+            white-space: pre-wrap;
         }
 
         /* Form */
@@ -182,7 +191,8 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        .edit-form input[type="text"] {
+        .edit-form input[type="text"],
+        .edit-form textarea {
             width: 100%;
             padding: 16px 20px;
             border: 2px solid rgba(255, 255, 255, 0.1);
@@ -195,11 +205,18 @@
             outline: none;
         }
 
-        .edit-form input[type="text"]::placeholder {
+        .edit-form textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .edit-form input[type="text"]::placeholder,
+        .edit-form textarea::placeholder {
             color: rgba(255, 255, 255, 0.4);
         }
 
-        .edit-form input[type="text"]:focus {
+        .edit-form input[type="text"]:focus,
+        .edit-form textarea:focus {
             border-color: #fbbf24;
             background: rgba(255, 255, 255, 0.12);
             box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.2);
@@ -278,26 +295,35 @@
         <div class="glass-card">
             <div class="header">
                 <div class="icon">✏️</div>
-                <h1>Edit Task</h1>
-                <p>Make changes to your task below</p>
+                <h1>Edit Note</h1>
+                <p>Make changes to your note below</p>
             </div>
 
-            <div class="current-task">
-                <div class="current-task-label">Current Task</div>
-                <div class="current-task-text"><%- todo %></div>
+            <div class="current-note">
+                <div class="current-note-label">Current Note</div>
+                <div class="current-note-title"><%- note.title %></div>
+                <% if (note.content) { %>
+                    <div class="current-note-content"><%- note.content %></div>
+                    <% } %>
             </div>
 
-            <form action="/todo/edit/<%= todoIdx %>" method="post" class="edit-form">
+            <form action="/notes/edit/<%= noteIdx %>" method="post" class="edit-form">
                 <input type="hidden" name="_method" value="PUT">
 
                 <div class="input-group">
-                    <label for="editTodo">New Task Text</label>
-                    <input type="text" name="editTodo" id="editTodo" placeholder="Enter updated task..." autofocus
-                        value="<%- todo %>">
+                    <label for="editTitle">Note Title</label>
+                    <input type="text" name="editTitle" id="editTitle" placeholder="Enter note title..." autofocus
+                        value="<%- note.title %>">
+                </div>
+
+                <div class="input-group">
+                    <label for="editContent">Note Content</label>
+                    <textarea name="editContent" id="editContent"
+                        placeholder="Enter note content..."><%- note.content %></textarea>
                 </div>
 
                 <div class="button-group">
-                    <a href="/todo" class="btn btn-secondary">
+                    <a href="/notes" class="btn btn-secondary">
                         ← Cancel
                     </a>
                     <button type="submit" class="btn btn-primary">

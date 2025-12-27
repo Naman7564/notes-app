@@ -1,5 +1,5 @@
 {
-  "name": "my-todolist",
+  "name": "my-notes-app",
   "version": "0.1.0",
   "dependencies": {
     "body-parser": "^1.16.0",
@@ -14,7 +14,7 @@
     "sonar": "sonar-scanner"
   },
   "author": "riaan@entersekt.com",
-  "description": "Basic to do list exercise",
+  "description": "A modern note-taking application",
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^6.2.1",

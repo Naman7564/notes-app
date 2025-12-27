@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Todo List App</title>
+        <title>Notes App</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="A modern, beautiful todo list application to organize your tasks efficiently.">
+        <meta name="description" content="A modern, beautiful note-taking application to organize your thoughts.">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -60,7 +60,7 @@
             }
 
             .container {
-                max-width: 600px;
+                max-width: 700px;
                 margin: 0 auto;
             }
 
@@ -106,11 +106,18 @@
             /* Form Styles */
             .add-form {
                 display: flex;
-                gap: 12px;
+                flex-direction: column;
+                gap: 16px;
                 margin-bottom: 30px;
             }
 
-            .add-form input[type="text"] {
+            .form-row {
+                display: flex;
+                gap: 12px;
+            }
+
+            .add-form input[type="text"],
+            .add-form textarea {
                 flex: 1;
                 padding: 16px 20px;
                 border: 2px solid rgba(255, 255, 255, 0.1);
@@ -123,11 +130,18 @@
                 outline: none;
             }
 
-            .add-form input[type="text"]::placeholder {
+            .add-form textarea {
+                min-height: 100px;
+                resize: vertical;
+            }
+
+            .add-form input[type="text"]::placeholder,
+            .add-form textarea::placeholder {
                 color: rgba(255, 255, 255, 0.4);
             }
 
-            .add-form input[type="text"]:focus {
+            .add-form input[type="text"]:focus,
+            .add-form textarea:focus {
                 border-color: #667eea;
                 background: rgba(255, 255, 255, 0.12);
                 box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
@@ -146,6 +160,7 @@
                 transition: all 0.3s ease;
                 display: flex;
                 align-items: center;
+                justify-content: center;
                 gap: 8px;
             }
 
@@ -158,19 +173,20 @@
                 transform: translateY(0);
             }
 
-            /* Todo List */
-            .todo-list {
+            /* Notes List */
+            .notes-list {
                 list-style: none;
+                display: grid;
+                gap: 16px;
             }
 
-            .todo-item {
+            .note-item {
                 display: flex;
-                align-items: center;
-                gap: 16px;
-                padding: 18px 20px;
+                flex-direction: column;
+                gap: 12px;
+                padding: 20px 24px;
                 background: rgba(255, 255, 255, 0.05);
                 border-radius: 16px;
-                margin-bottom: 12px;
                 border: 1px solid rgba(255, 255, 255, 0.08);
                 transition: all 0.3s ease;
                 animation: slideIn 0.4s ease-out;
@@ -179,31 +195,47 @@
             @keyframes slideIn {
                 from {
                     opacity: 0;
-                    transform: translateX(-20px);
+                    transform: translateY(-10px);
                 }
                 to {
                     opacity: 1;
-                    transform: translateX(0);
+                    transform: translateY(0);
                 }
             }
 
-            .todo-item:hover {
+            .note-item:hover {
                 background: rgba(255, 255, 255, 0.1);
                 border-color: rgba(255, 255, 255, 0.15);
-                transform: translateX(4px);
+                transform: translateY(-2px);
             }
 
-            .todo-text {
-                flex: 1;
-                font-size: 1rem;
-                font-weight: 400;
-                color: rgba(255, 255, 255, 0.9);
+            .note-header {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .note-title {
+                font-size: 1.15rem;
+                font-weight: 600;
+                color: rgba(255, 255, 255, 0.95);
                 word-break: break-word;
             }
 
-            .todo-actions {
+            .note-content {
+                font-size: 0.95rem;
+                font-weight: 400;
+                color: rgba(255, 255, 255, 0.6);
+                line-height: 1.6;
+                word-break: break-word;
+                white-space: pre-wrap;
+            }
+
+            .note-actions {
                 display: flex;
                 gap: 8px;
+                flex-shrink: 0;
             }
 
             .action-btn {
@@ -264,8 +296,8 @@
                 font-size: 0.95rem;
             }
 
-            /* Task Counter */
-            .task-counter {
+            /* Notes Counter */
+            .notes-counter {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -274,13 +306,13 @@
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            .task-counter h2 {
+            .notes-counter h2 {
                 font-size: 1.1rem;
                 font-weight: 600;
                 color: rgba(255, 255, 255, 0.8);
             }
 
-            .task-count {
+            .notes-count {
                 padding: 6px 14px;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 border-radius: 20px;
@@ -302,12 +334,8 @@
                     padding: 20px;
                 }
 
-                .add-form {
+                .form-row {
                     flex-direction: column;
-                }
-
-                .add-form button {
-                    justify-content: center;
                 }
             }
         </style>
@@ -316,41 +344,47 @@
     <body>
         <div class="container">
             <div class="header">
-                <h1>✨ My Todo List</h1>
-                <p>Stay organized, get things done</p>
+                <h1>📝 My Notes</h1>
+                <p>Capture your thoughts, organize your ideas</p>
             </div>
 
             <div class="glass-card">
-                <form action="/todo/add/" method="post" class="add-form">
-                    <input type="text" name="newtodo" id="newtodo" placeholder="What needs to be done?" autofocus />
+                <form action="/notes/add/" method="post" class="add-form">
+                    <input type="text" name="newTitle" id="newTitle" placeholder="Note title..." autofocus />
+                    <textarea name="newContent" id="newContent" placeholder="Write your note here..."></textarea>
                     <button type="submit">
-                        <span>➕</span>
-                        Add Task
+                        <span>✨</span>
+                        Add Note
                     </button>
                 </form>
 
-                <% if (todolist.length > 0) { %>
-                    <div class="task-counter">
-                        <h2>Your Tasks</h2>
-                        <span class="task-count"><%= todolist.length %> item<%= todolist.length !== 1 ? 's' : '' %></span>
+                <% if (notes.length > 0) { %>
+                    <div class="notes-counter">
+                        <h2>Your Notes</h2>
+                        <span class="notes-count"><%= notes.length %> note<%= notes.length !== 1 ? 's' : '' %></span>
                     </div>
 
-                    <ul class="todo-list">
-                        <% todolist.forEach(function(todo, index) { %>
-                            <li class="todo-item" style="animation-delay: <%= index * 0.1 %>s">
-                                <span class="todo-text"><%- todo %></span>
-                                <div class="todo-actions">
-                                    <a href="/todo/<%= index %>" class="action-btn edit-btn" title="Edit">✏️</a>
-                                    <a href="/todo/delete/<%= index %>" class="action-btn delete-btn" title="Delete">🗑️</a>
+                    <ul class="notes-list">
+                        <% notes.forEach(function(note, index) { %>
+                            <li class="note-item" style="animation-delay: <%= index * 0.1 %>s">
+                                <div class="note-header">
+                                    <span class="note-title"><%- note.title %></span>
+                                    <div class="note-actions">
+                                        <a href="/notes/<%= index %>" class="action-btn edit-btn" title="Edit">✏️</a>
+                                        <a href="/notes/delete/<%= index %>" class="action-btn delete-btn" title="Delete">🗑️</a>
+                                    </div>
                                 </div>
+                                <% if (note.content) { %>
+                                    <div class="note-content"><%- note.content %></div>
+                                <% } %>
                             </li>
                         <% }); %>
                     </ul>
                 <% } else { %>
                     <div class="empty-state">
-                        <div class="icon">📝</div>
-                        <h3>No tasks yet</h3>
-                        <p>Add your first task above to get started!</p>
+                        <div class="icon">📒</div>
+                        <h3>No notes yet</h3>
+                        <p>Add your first note above to get started!</p>
                     </div>
                 <% } %>
             </div>
