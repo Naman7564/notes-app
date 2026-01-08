@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Notes App</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="A modern, beautiful note-taking application to organize your thoughts.">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+                min-height: 100vh;
+                background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+                color: #fff;
+                padding: 40px 20px;
+                position: relative;
+                overflow-x: hidden;
+            }
+
+            /* Animated background orbs */
+            body::before,
+            body::after {
+                content: '';
+                position: fixed;
+                border-radius: 50%;
+                filter: blur(80px);
+                opacity: 0.5;
+                z-index: -1;
+                animation: float 8s ease-in-out infinite;
+            }
+
+            body::before {
+                width: 400px;
+                height: 400px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                top: -100px;
+                right: -100px;
+            }
+
+            body::after {
+                width: 300px;
+                height: 300px;
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                bottom: -50px;
+                left: -50px;
+                animation-delay: -4s;
+            }
+
+            @keyframes float {
+                0%, 100% { transform: translateY(0) rotate(0deg); }
+                50% { transform: translateY(-30px) rotate(5deg); }
+            }
+
+            .container {
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            /* Header */
+            .header {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+                font-weight: 700;
+                background: linear-gradient(135deg, #667eea 0%, #f093fb 50%, #f5576c 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 10px;
+                animation: shimmer 3s ease-in-out infinite;
+            }
+
+            @keyframes shimmer {
+                0%, 100% { filter: brightness(1); }
+                50% { filter: brightness(1.2); }
+            }
+
+            .header p {
+                color: rgba(255, 255, 255, 0.6);
+                font-size: 1rem;
+                font-weight: 300;
+            }
+
+            /* Glass Card */
+            .glass-card {
+                background: rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-radius: 24px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 30px;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            }
+
+            /* Form Styles */
+            .add-form {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                margin-bottom: 30px;
+            }
+
+            .form-row {
+                display: flex;
+                gap: 12px;
+            }
+
+            .add-form input[type="text"],
+            .add-form textarea {
+                flex: 1;
+                padding: 16px 20px;
+                border: 2px solid rgba(255, 255, 255, 0.1);
+                border-radius: 16px;
+                background: rgba(255, 255, 255, 0.08);
+                color: #fff;
+                font-family: inherit;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                outline: none;
+            }
+
+            .add-form textarea {
+                min-height: 100px;
+                resize: vertical;
+            }
+
+            .add-form input[type="text"]::placeholder,
+            .add-form textarea::placeholder {
+                color: rgba(255, 255, 255, 0.4);
+            }
+
+            .add-form input[type="text"]:focus,
+            .add-form textarea:focus {
+                border-color: #667eea;
+                background: rgba(255, 255, 255, 0.12);
+                box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+            }
+
+            .add-form button {
+                padding: 16px 28px;
+                border: none;
+                border-radius: 16px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: #fff;
+                font-family: inherit;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .add-form button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px -5px rgba(102, 126, 234, 0.5);
+            }
+
+            .add-form button:active {
+                transform: translateY(0);
+            }
+
+            /* Notes List */
+            .notes-list {
+                list-style: none;
+                display: grid;
+                gap: 16px;
+            }
+
+            .note-item {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                padding: 20px 24px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 16px;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                transition: all 0.3s ease;
+                animation: slideIn 0.4s ease-out;
+            }
+
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .note-item:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: rgba(255, 255, 255, 0.15);
+                transform: translateY(-2px);
+            }
+
+            .note-header {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 12px;
+            }
+
+            .note-title {
+                font-size: 1.15rem;
+                font-weight: 600;
+                color: rgba(255, 255, 255, 0.95);
+                word-break: break-word;
+            }
+
+            .note-content {
+                font-size: 0.95rem;
+                font-weight: 400;
+                color: rgba(255, 255, 255, 0.6);
+                line-height: 1.6;
+                word-break: break-word;
+                white-space: pre-wrap;
+            }
+
+            .note-actions {
+                display: flex;
+                gap: 8px;
+                flex-shrink: 0;
+            }
+
+            .action-btn {
+                width: 38px;
+                height: 38px;
+                border: none;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-decoration: none;
+                font-size: 1.1rem;
+            }
+
+            .edit-btn {
+                background: rgba(251, 191, 36, 0.15);
+                color: #fbbf24;
+            }
+
+            .edit-btn:hover {
+                background: rgba(251, 191, 36, 0.3);
+                transform: scale(1.1);
+            }
+
+            .delete-btn {
+                background: rgba(239, 68, 68, 0.15);
+                color: #ef4444;
+            }
+
+            .delete-btn:hover {
+                background: rgba(239, 68, 68, 0.3);
+                transform: scale(1.1);
+            }
+
+            /* Empty State */
+            .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+                color: rgba(255, 255, 255, 0.4);
+            }
+
+            .empty-state .icon {
+                font-size: 4rem;
+                margin-bottom: 20px;
+                opacity: 0.5;
+            }
+
+            .empty-state h3 {
+                font-size: 1.25rem;
+                font-weight: 500;
+                margin-bottom: 8px;
+                color: rgba(255, 255, 255, 0.6);
+            }
+
+            .empty-state p {
+                font-size: 0.95rem;
+            }
+
+            /* Notes Counter */
+            .notes-counter {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 20px;
+                padding-bottom: 20px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .notes-counter h2 {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            .notes-count {
+                padding: 6px 14px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 20px;
+                font-size: 0.85rem;
+                font-weight: 600;
+            }
+
+            /* Responsive */
+            @media (max-width: 480px) {
+                body {
+                    padding: 20px 15px;
+                }
+
+                .header h1 {
+                    font-size: 1.8rem;
+                }
+
+                .glass-card {
+                    padding: 20px;
+                }
+
+                .form-row {
+                    flex-direction: column;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>📝 My Notes</h1>
+                <p>
+                    Capture your thoughts, organize your ideas
+                    <% if (user) { %>
+                        <span style="display:block; margin-top:8px; font-size:0.95rem; opacity:0.85;">
+                            Signed in as <strong><%= user.username %></strong> · <a href="/logout" style="color:#60a5fa;">Logout</a>
+                        </span>
+                    <% } %>
+                </p>
+            </div>
+
+            <div class="glass-card">
+                <form action="/notes/add/" method="post" class="add-form">
+                    <input type="text" name="newTitle" id="newTitle" placeholder="Note title..." autofocus />
+                    <textarea name="newContent" id="newContent" placeholder="Write your note here..."></textarea>
+                    <button type="submit">
+                        <span>✨</span>
+                        Add Note
+                    </button>
+                </form>
+
+                <% if (notes.length > 0) { %>
+                    <div class="notes-counter">
+                        <h2>Your Notes</h2>
+                        <span class="notes-count"><%= notes.length %> note<%= notes.length !== 1 ? 's' : '' %></span>
+                    </div>
+
+                    <ul class="notes-list">
+                        <% notes.forEach(function(note, index) { %>
+                            <li class="note-item" style="animation-delay: <%= index * 0.1 %>s">
+                                <div class="note-header">
+                                    <span class="note-title"><%- note.title %></span>
+                                    <div class="note-actions">
+                                        <a href="/notes/<%= index %>" class="action-btn edit-btn" title="Edit">✏️</a>
+                                        <a href="/notes/delete/<%= index %>" class="action-btn delete-btn" title="Delete">🗑️</a>
+                                    </div>
+                                </div>
+                                <% if (note.content) { %>
+                                    <div class="note-content"><%- note.content %></div>
+                                <% } %>
+                            </li>
+                        <% }); %>
+                    </ul>
+                <% } else { %>
+                    <div class="empty-state">
+                        <div class="icon">📒</div>
+                        <h3>No notes yet</h3>
+                        <p>Add your first note above to get started!</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </body>
+</html>

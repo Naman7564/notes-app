@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Edit Note</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Edit your note">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #fff;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Animated background orbs */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        body::before {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            top: -100px;
+            right: -100px;
+        }
+
+        body::after {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            bottom: -50px;
+            left: -50px;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-30px) rotate(5deg);
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header .icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Current Note Display */
+        .current-note {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .current-note-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 10px;
+        }
+
+        .current-note-title {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+
+        .current-note-content {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        /* Form */
+        .edit-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .edit-form input[type="text"],
+        .edit-form textarea {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .edit-form textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .edit-form input[type="text"]::placeholder,
+        .edit-form textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .edit-form input[type="text"]:focus,
+        .edit-form textarea:focus {
+            border-color: #fbbf24;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1a1a2e;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -5px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            body {
+                padding: 20px 15px;
+                align-items: flex-start;
+                padding-top: 60px;
+            }
+
+            .glass-card {
+                padding: 30px 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="glass-card">
+            <div class="header">
+                <div class="icon">✏️</div>
+                <h1>Edit Note</h1>
+                <p>Make changes to your note below</p>
+            </div>
+
+            <div class="current-note">
+                <div class="current-note-label">Current Note</div>
+                <div class="current-note-title"><%- note.title %></div>
+                <% if (note.content) { %>
+                    <div class="current-note-content"><%- note.content %></div>
+                    <% } %>
+            </div>
+
+            <form action="/notes/edit/<%= noteIdx %>" method="post" class="edit-form">
+                <input type="hidden" name="_method" value="PUT">
+
+                <div class="input-group">
+                    <label for="editTitle">Note Title</label>
+                    <input type="text" name="editTitle" id="editTitle" placeholder="Enter note title..." autofocus
+                        value="<%- note.title %>">
+                </div>
+
+                <div class="input-group">
+                    <label for="editContent">Note Content</label>
+                    <textarea name="editContent" id="editContent"
+                        placeholder="Enter note content..."><%- note.content %></textarea>
+                </div>
+
+                <div class="button-group">
+                    <a href="/notes" class="btn btn-secondary">
+                        ← Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        💾 Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
